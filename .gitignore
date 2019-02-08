@@ -39,7 +39,7 @@ jspm_packages
 
 .vscode
 .nvmrc
-build/*
+dist/*
 .DS_Store
 
 models/*

@@ -1,9 +1,11 @@
-import { type, typeMutation } from './type';
-import { mutations, resolvers } from './queries';
+const { type, typeMutation, typeQuery } = require('./type')
+const { queries, mutations, resolvers } = require('./queries')
 
-export {
+module.exports = {
   type,
   typeMutation,
+  typeQuery,
+  queries,
   mutations,
   resolvers,
-};
+}

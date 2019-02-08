@@ -1,4 +1,4 @@
-export const type = `
+exports.type = `
   type Author {
     id: Int!
     firstName: String
@@ -11,9 +11,8 @@ export const type = `
     author: Author
     votes: Int
   }
-`;
+`
 
-
-export const typeMutation = `
+exports.typeMutation = `
   upvotePost(postId: Int!): Post
-`;
+`
