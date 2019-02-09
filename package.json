@@ -17,16 +17,17 @@
     "tidy": "prettier --config ./prettier.json --write \"{src,test}/**/*.{t,j}s\""
   },
   "devDependencies": {
+    "@types/graphql": "^14.0.5",
     "@types/lodash": "^4.14.120",
     "@types/node": "^10.12.23",
     "expect": "^1.20.2",
     "graphql": "^14.1.1",
-    "graphql-tools": "^4.0.4",
     "mocha": "^5.2.0",
     "prettier": "^1.16.4",
     "typescript": "^3.3.3"
   },
   "dependencies": {
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "graphql-tools": "^4.0.4"
   }
 }

@@ -1,10 +1,6 @@
 import { readdirSync, existsSync } from 'fs'
 import { merge, isEmpty } from 'lodash'
-
-interface Resolvers {
-  RootQuery?: Object
-  Mutations?: Object
-}
+import { IResolvers } from 'graphql-tools'
 
 class SchemaGenerator {
   path: string
@@ -67,7 +63,7 @@ class SchemaGenerator {
       }
     })
 
-    const objToReturn = <Resolvers>{
+    const objToReturn = <IResolvers>{
       ...mergedResolvers,
     }
 
