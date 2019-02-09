@@ -1,6 +1,6 @@
 {
   "name": "@stayradiated/saturn-gql",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Package modularized apollo-server schema",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
