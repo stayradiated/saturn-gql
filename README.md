@@ -1,46 +1,53 @@
 # Saturn-GQL
 
-[![Build Status](https://travis-ci.org/electric-it/saturn-gql.svg?branch=master)](https://travis-ci.org/electric-it/saturn-gql)
-[![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/saturn-gql)
-
-
 ## Install
 ```
-npm i saturn-gql
+npm i @stayradiated/saturn-gql
 ```
 
-Has your GraphQL api code grown out of control? Does your GraphQL api sit in a single file with thousands of lines of code? Unsure of the best way to logically separate it all? Saturn-GQL is here to help!
+Has your GraphQL api code grown out of control? Does your GraphQL api sit in a
+single file with thousands of lines of code? Unsure of the best way to
+logically separate it all? Saturn-GQL is here to help!
 
-Saturn-GQL takes care of packaging up your modularized [graphql-tools](https://github.com/apollographql/graphql-tools) schema, allowing you to separate your types, queries and mutations into logical groupings.
+Saturn-GQL takes care of packaging up your modularized
+[graphql-tools](https://github.com/apollographql/graphql-tools) schema,
+allowing you to separate your types, queries and mutations into logical
+groupings.
 
-To get started, you'll need to split your graphql api into a directory structure similar to the diagram below. If you are already using [graphql-tools](https://github.com/apollographql/graphql-tools) this should be a fairly trivial step.
-
- Any file not labeled **optional** in the below diagram is required in order for Saturn-GQL to work. Feel free to checkout this [blog post](https://itnext.io/introducing-saturn-gql-an-opinionated-way-to-develop-graphql-apis-d99bf4d0790e) for a deeper explanation and example.
+To get started, you'll need to split your graphql api into a directory
+structure similar to the diagram below. If you are already using
+[graphql-tools](https://github.com/apollographql/graphql-tools) this should be
+a fairly trivial step.
 
 ``` shell
 graphql
-  group-1
+  group1
     index.js
-    mutations.js <- optional
-    queries.js
-    resolver.js <- optional
-    type.js
-  group-2
+  group2
     index.js
-    mutations.js <- optional
-    queries.js
-    resolver.js <- optional
-    type.js
+  group3
+    index.js
 ```
+
+Each index file can export the following properties:
+
+- `resolvers`
+- `queries`
+- `mutations`
+- `subscriptions`
+- `type`
+- `typeQuery`
+- `typeMutation`
+- `typeSubscription`
 
 ## To Use
 
 ``` javascript
-import Saturn from 'saturn-gql';
-const saturn = new Saturn(`${__dirname}/graphql`);
-```
+import { makeExecutableSchema } from 'apollo-tools'
 
-``` javascript
+import Saturn from '@stayradiated/saturn-gql';
+const saturn = new Saturn(`${__dirname}/graphql`);
+
 // Graphql Schema
 const schema = makeExecutableSchema(saturn.makeSchema());
 
@@ -51,60 +58,27 @@ const types = saturn.createTypes();
 const resolvers = saturn.createResolvers();
 ```
 
-Note that `apollo-tools` is not a dependency of this library. This is to avoid any duplication or version misatches of the `graphql` package.
+Note that `apollo-tools` is not a dependency of this library. This is to avoid
+any duplication or version misatches of the `graphql` package.
 
 ## File layouts
 
-Files should be laid in in a similar fashion
+Each directory should have an `index.js` or `index.ts` file.
 
-``` javascript
-/* index.js */
+You can also split up the definitions into multiple files, like so:
 
-import { type, typeMutation, typeQuery } from './type';
-import { queries, mutations, resolvers } from './queries';
-
-export {
-  type,
-  typeMutation,
-  typeQuery,
-  queries,
-  mutations,
-  resolvers,
-};
+```
+- index.js
+- queries.js
+- mutations.js
+- type.js
 ```
 
-``` javascript
-/* queries.js */
+### Types
 
-export const queries = {
-  posts: () => posts,
-  author: (_, { id }) => find(authors, { id }),
-};
-
-export const mutations = {
-  upvotePost: (_, { postId }) => {
-    const post = find(posts, { id: postId });
-    if (!post) {
-      throw new Error(`Couldn't find post with id ${postId}`);
-    }
-    post.votes += 1;
-    return post;
-  },
-};
-
-export const resolvers = {
-  Author: {
-    posts: author => filter(posts, { authorId: author.id }),
-  },
-  Post: {
-    author: post => find(authors, { id: post.authorId }),
-  },
-};
-```
+This string is copied as-is into the schema types.
 
 ``` javascript
-/* type.js */
-
 export const type = `
   type Author {
     id: Int!
@@ -120,33 +94,70 @@ export const type = `
     votes: Int
   }
 `;
+```
 
+### Query Types
+
+This is used to define fields on the "RootQuery" type.
+
+``` javascript
 export const typeQuery = `
   posts: [Post]
   author(id: Int!): Author
 `;
+```
 
+### Mutation Types
+
+This is used to define mutations.
+
+``` javascript
 export const typeMutation = `
   upvotePost(postId: Int!): Post
 `;
 ```
 
---- 
-Mutations and resolvers can also be split off into their own files.
+### Subscription Types
+
+This is used to define subscriptions.
 
 ``` javascript
-/* queries.js */
+export const typeSubscription = `
+  postAdded(): Post
+`;
+```
 
+### Resolvers
+
+This is used to implement the resolving functions for any types.
+
+``` javascript
+export const resolvers = {
+  Author: {
+    posts: author => filter(posts, { authorId: author.id }),
+  },
+  Post: {
+    author: post => find(authors, { id: post.authorId }),
+  },
+};
+```
+
+### Queries
+
+This is used to implement the RootQuery field resolvers.
+
+``` javascript
 export const queries = {
   posts: () => posts,
   author: (_, { id }) => find(authors, { id }),
 };
 ```
 
+### Mutations
+
+This is used to implement the Mutation handlers.
 
 ``` javascript
-/* mutations.js */
-
 export const mutations = {
   upvotePost: (_, { postId }) => {
     const post = find(posts, { id: postId });
@@ -159,18 +170,38 @@ export const mutations = {
 };
 ```
 
-``` javascript
-/* resolvers.js */
+### Subscriptions
 
-export const resolvers = {
-  Author: {
-    posts: author => filter(posts, { authorId: author.id }),
-  },
-  Post: {
-    author: post => find(authors, { id: post.authorId }),
+This is used to implement the Subscription handlers.
+
+``` javascript
+export const subscriptions = {
+  postAdded: {
+    subscribe: () => ({
+      async next() {
+        const post = await waitForPostToBeCreated()
+        return {
+          value: post,
+          done: false
+        }
+      },
+      async return() {
+        return {
+          value: undefined,
+          done: true
+        }
+      },
+      async throw(error) {
+        throw error
+      },
+      [Symbol.asyncIterator]() {
+        return this
+      }
+    })
   },
 };
 ```
+
 
 ## License
 
@@ -186,3 +217,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+```
