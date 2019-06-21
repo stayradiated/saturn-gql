@@ -1,3 +1,9 @@
+# DEPRECATION NOTICE
+
+This project has been moved to
+[`@mishguru/graphlqdir`](https://github.com/mishguruorg/graphqldir). Please
+open issues and pulll requests over there.
+
 # Saturn-GQL
 
 ## Install
