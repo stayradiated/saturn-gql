@@ -4,7 +4,7 @@
   "description": "Package modularized apollo-server schema",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
-  "repository": "https://github.com/stayradiated/stayradiated",
+  "repository": "https://github.com/stayradiated/saturn-gql",
   "author": "George Czabania",
   "contributors": [
     "Brian Kurtz (https://github.com/bskurtz)",
@@ -12,22 +12,19 @@
   ],
   "license": "Apache-2.0",
   "scripts": {
-    "test": "mocha",
-    "build": "tsc",
-    "tidy": "prettier --config ./prettier.json --write \"{src,test}/**/*.{t,j}s\""
+    "test": "pkg-test",
+    "build": "pkg-build",
+    "tidy": "pkg-tidy"
   },
   "devDependencies": {
-    "@types/graphql": "^14.0.5",
-    "@types/lodash": "^4.14.120",
-    "@types/node": "^10.12.23",
-    "expect": "^1.20.2",
-    "graphql": "^14.1.1",
-    "mocha": "^5.2.0",
-    "prettier": "^1.16.4",
-    "typescript": "^3.3.3"
+    "@mishguru/package": "7.0.1",
+    "@types/graphql": "^14.2.1",
+    "@types/lodash": "^4.14.134",
+    "@types/node": "^12.0.8",
+    "graphql": "^14.3.1"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
-    "graphql-tools": "^4.0.4"
+    "graphql-tools": "^4.0.5",
+    "lodash": "^4.17.11"
   }
 }
